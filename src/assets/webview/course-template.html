@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Course Viewer</title>
+<style>
+  :root {
+    --primary: #6366F1;
+    --bg: #0B0F1A;
+    --surface: #111827;
+    --text: #F1F5F9;
+    --muted: #94A3B8;
+    --border: #1E293B;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.7;
+  }
+  .hero-img {
+    width: 100%;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    max-height: 220px;
+    object-fit: cover;
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(99,102,241,0.18);
+    color: var(--primary);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    text-transform: capitalize;
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .instructor { display: flex; align-items: center; margin-bottom: 18px; }
+  .instructor-name { font-size: 13px; color: var(--muted); margin-left: 0; }
+  .meta { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+  .meta-item { font-size: 13px; color: var(--muted); }
+  .meta-item span { color: var(--text); font-weight: 600; }
+  .section { margin-bottom: 28px; }
+  .section h2 { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+  .description { font-size: 15px; color: var(--muted); line-height: 1.8; }
+  .progress-bar { background: var(--border); border-radius: 8px; height: 8px; overflow: hidden; margin-bottom: 8px; }
+  .progress-fill { height: 100%; border-radius: 8px; background: var(--primary); transition: width 0.5s; }
+  .progress-label { font-size: 12px; color: var(--muted); text-align: right; }
+  .complete-btn {
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 24px;
+    letter-spacing: 0.3px;
+  }
+  .complete-btn:active { opacity: 0.85; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+  var courseData = null;
+  var progress = 0;
+
+  function notify(type, payload) {
+    try {
+      window.ReactNativeWebView.postMessage(JSON.stringify({ type: type, payload: payload }));
+    } catch(e) {}
+  }
+
+  function updateProgress(val) {
+    progress = Math.min(100, val);
+    var fill = document.getElementById('progress-fill');
+    var label = document.getElementById('progress-label');
+    if (fill) fill.style.width = progress + '%';
+    if (label) label.textContent = progress + '% complete';
+    notify('PROGRESS', progress);
+  }
+
+  function markComplete() {
+    updateProgress(100);
+    notify('COMPLETE', null);
+    var btn = document.getElementById('complete-btn');
+    if (btn) { btn.textContent = '✅ Completed!'; btn.disabled = true; btn.style.background = '#22C55E'; }
+  }
+
+  function render(data) {
+    document.getElementById('app').innerHTML = [
+      '<img class="hero-img" src="', data.thumbnail, '" alt="', data.title, '" onerror="this.style.display=\'none\'">',
+      '<span class="badge">', data.category, '</span>',
+      '<h1>', data.title, '</h1>',
+      '<p class="instructor-name">👤 ', data.instructorName, '</p>',
+      '<div class="meta">',
+        '<div class="meta-item">⭐ <span>', parseFloat(data.rating).toFixed(1), '</span></div>',
+        '<div class="meta-item">💰 <span>$', data.price, '</span></div>',
+      '</div>',
+      '<hr class="divider">',
+      '<div class="section">',
+        '<h2>About this Course</h2>',
+        '<p class="description">', data.description, '</p>',
+      '</div>',
+      '<hr class="divider">',
+      '<div class="section">',
+        '<h2>Your Progress</h2>',
+        '<div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>',
+        '<p class="progress-label" id="progress-label">0% complete</p>',
+      '</div>',
+      '<button class="complete-btn" id="complete-btn" onclick="markComplete()">Mark as Complete</button>'
+    ].join('');
+
+    // Simulate reading progress as user scrolls
+    window.addEventListener('scroll', function() {
+      var scrolled = window.scrollY;
+      var total = document.body.scrollHeight - window.innerHeight;
+      if (total > 0) {
+        var pct = Math.round((scrolled / total) * 90);
+        if (pct > progress) updateProgress(pct);
+      }
+    });
+  }
+
+  // Called by React Native via injectedJavaScript
+  window.loadCourse = function(data) {
+    courseData = data;
+    render(data);
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    if (courseData) render(courseData);
+  });
+</script>
+</body>
+</html>
