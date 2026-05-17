@@ -1,14 +1,38 @@
 # LearnHub LMS
 
-A production-grade Mini LMS mobile application built with React Native Expo and TypeScript.
+A Mini LMS mobile application built with React Native Expo and TypeScript.
 
-[Watch Demo Video (Placeholder)]() | [Download APK (Placeholder)]()
+Demo Video Link - https://drive.google.com/file/d/1oBhAjenkg_5RVaFRiijqCjvMN2HtKZwb/view?usp=drive_link
 
-## Screenshots
+APK File - https://expo.dev/accounts/sunnnnnnny/projects/learnhub-lms/builds/cb24bd8e-20e1-42dc-bc4a-d53c6e463dc7
 
-| Explore / Home | Course Details | Lesson View (WebView) | Profile / Settings |
-|:---:|:---:|:---:|:---:|
-| ![Home](assets/screenshots/home.png) | ![Course Details](assets/screenshots/course_details.png) | ![Lesson](assets/screenshots/lesson.png) | ![Profile](assets/screenshots/profile.png) |
+---
+<table>
+  <tr>
+    <td align="center"><b>Login</b></td>
+    <td align="center"><b>Register</b></td>
+    <td align="center"><b>Explore</b></td>
+    <td align="center"><b>Course Detail</b></td>
+  </tr>
+  <tr>
+    <td><img src="./assets/screenshots/login.png" width="220"/></td>
+    <td><img src="./assets/screenshots/register.png" width="220"/></td>
+    <td><img src="./assets/screenshots/explore.png" width="220"/></td>
+    <td><img src="./assets/screenshots/course_detail.png" width="220"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Bookmarks</b></td>
+    <td align="center"><b>Profile</b></td>
+    <td align="center"><b>Notifications</b></td>
+    <td align="center"><b>WebView</b></td>
+  </tr>
+  <tr>
+    <td><img src="./assets/screenshots/bookmark.png" width="220"/></td>
+    <td><img src="./assets/screenshots/profile.png" width="220"/></td>
+    <td><img src="./assets/screenshots/notifications.png" width="220"/></td>
+    <td><img src="./assets/screenshots/webview.png" width="220"/></td>
+  </tr>
+</table>
 
 ## Features
 
